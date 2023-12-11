@@ -1,0 +1,113 @@
+#include <iostream>
+#include <cctype>
+
+using namespace std;
+
+// Function prototypes
+string generateKey(string cipherKey, string inputText);
+string vigenereEncrypt(string cipherKey, string inputText);
+string vigenereDecrypt(string cipherKey, string encryptedText);
+
+// Function to generate a key based on the input text and cipher key
+string generateKey(string cipherKey, string inputText) {
+    string newKey = "";
+
+    for (int i = 0; i < inputText.length(); i++) {
+        newKey = newKey + cipherKey[i % cipherKey.length()];
+    }
+
+    return newKey;
+}
+
+// Function to perform Vigenere encryption
+string vigenereEncrypt(string cipherKey, string inputText) {
+    string encryptionKey = "";
+    char temp;
+
+    for (int i = 0; i < inputText.length(); i++) {
+        // Perform encryption on each character
+        temp = ((tolower(inputText[i]) + tolower(cipherKey[i]) - 12) % 26) + 65;
+        encryptionKey += temp;
+    }
+
+    return encryptionKey;
+}
+
+// Function to perform Vigenere decryption
+string vigenereDecrypt(string cipherKey, string encryptedText) {
+    string decryptKey = "";
+    char temp;
+
+    for (int i = 0; i < encryptedText.length(); i++) {
+        // Perform decryption on each character
+        temp = (tolower(encryptedText[i]) - tolower(cipherKey[i]) + 26) % 26 + 65;
+        decryptKey += temp;
+    }
+
+    return decryptKey;
+}
+//Start of program
+int main() {
+    string cipherKey, inputText, encryptedText, decryptedText;
+    int userChoice;
+
+    do {
+        // Display program menu
+        cout << "This is a cypher machine!" << endl;
+        cout << "Select a choice below to begin." << endl;
+        cout << "1. Encrypt a message of your choice " << endl;
+        cout << "2. Decrypt a message of your choice " << endl;
+        cout << "0. Exit the program " << endl;
+        cout << "PS. Selecting 'Encrypt' first and putting the answer into the 'decrypt' to see if your secret message can be read!. >_0 " << endl;
+        cin >> userChoice;
+
+        switch (userChoice) {
+            case 1: {
+                // Encrypt a word
+                cout << "Type a word to be encrypted : ";
+                cin >> inputText;
+
+                cout << "\nType a cipherKey to be used for the encryption: ";
+                cin >> cipherKey;
+
+                // Generate key and perform encryption
+                cipherKey = generateKey(cipherKey, inputText);
+                encryptedText = vigenereEncrypt(cipherKey, inputText);
+
+                // Display the encrypted text
+                cout << "\nHere is the Encrypted ciphertext: " << encryptedText << endl;
+                cout << endl;
+            }
+                break;
+            case 2: {
+                // Decrypt a word
+                cout << "Type the ciphertext to be decrypted : ";
+                cin >> inputText;
+
+                cout << "\nWhat was the cipherKey used for encryption? :  ";
+                cin >> cipherKey;
+
+                // Generate key and perform decryption
+                cipherKey = generateKey(cipherKey, inputText);
+                decryptedText = vigenereDecrypt(cipherKey, inputText);
+
+                // Display the decrypted text
+                cout << "\nDecrypted ciphertext: " << decryptedText << endl;
+                cout << endl;
+            }
+                break;
+            case 0:
+                // Exit the program
+                cout << "Thanks for utilizing me. Wishing you a fantastic day!" << endl;
+                
+                break;
+                
+            default:
+                // Invalid option
+                cout << "Sorry this isn't doable." << endl;
+        }
+
+    } while (userChoice != 0);
+
+    return 0;
+}
